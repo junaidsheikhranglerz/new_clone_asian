@@ -1,0 +1,361 @@
+﻿@model List<ranglerz_project.Models.TransactionAccount>
+
+@{
+    ViewBag.Title = "Sale Voucher";
+      
+}
+
+
+
+
+
+
+
+    <div class="container body">
+
+
+        <div class="main_container">
+
+            @{
+                Html.RenderPartial("_Partial");
+            }
+          
+            
+            <div class="right_col col-md-10 pull-right" role="main">
+                <div class="">
+
+
+
+                    <div class="page-title">
+                        <div class="title_left">
+                            <h3>Sale Voucher</h3>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>New Sale Voucher <strong>@ViewBag.Code</strong></h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <form id="demo-form2" onsubmit="return submitResult();" action="@Url.Action("AddSaleVoucher", "TemporaryReports")" method="post" data-parsley-validate class="form-horizontal form-label-left">
+                                <div class="x_content">
+                                    <br />
+
+
+
+
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                            To Client <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <select id="to" name="to" required onchange="GetVendors(this.value);" class="form-control chzn-select col-md-7 col-xs-12">
+                                                <option value="">Please select any </option>
+                                                @foreach (var tr in Model.Where(x => x.type_ == "Client" || x.type_ == "Vendor" || x.type_ == "Sundry"))
+                                                {
+                                                    <option value="@tr.id">@tr.MainAccount.name -> @tr.name </option>
+                                                }
+
+
+                                            </select>
+                                        </div>
+
+
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                            Good <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <select name="from" id="VendorsDD" class="form-control  col-md-7 col-xs-12">
+                                                <option>Select any </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    
+
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Truck </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" name="truck" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Builty# </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" name="builty" onkeypress='validate(event)' required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Weight Load </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="txtFirstValue" onkeyup="javascript:Add();" class="form-control col-md-7 col-xs-12" type="text" name="load" onkeypress='validate(event)' required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Weight Empty </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="txtSecondValue" onkeyup="javascript:Add();" class="form-control col-md-7 col-xs-12" type="text" onkeypress='validate(event)' name="empty" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">No. Of Bags </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" name="bags" onkeypress='validate(event)' required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Net Weight </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="txtTotal" class="form-control col-md-7 col-xs-12" readonly type="text" name="net" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Date </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="middle-name" class="form-control col-md-7 col-xs-12" type="date" name="date" max="2017-12-31" min="2016-01-01" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Description </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" name="description" required>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                        <a class="btn btn-primary" onclick="findSaleOrder()">Check Sale Order #</a>
+                                    </div>
+                                </div>
+                                <div class="form-group hide" id="SaleOrder">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                        SO# <span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <select name="order_num" id="SO" class="form-control  col-md-7 col-xs-12">
+                                            <option value="">Select any </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="ln_solid"></div>
+                                <div class="form-group">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+
+                                        <input type="submit" id="btnSubmit" name="actionType" value="Add Voucher" class="btn btn-success" />
+                                        <input type="submit" name="actionType" value="Add and Print" class="btn btn-success" />
+                                        <input type="hidden" name="voucherCode" value="@ViewBag.Code" />
+
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+>
+
+    </div>
+
+    
+
+
+
+
+
+    <script language="javascript" type="text/javascript">
+
+   
+
+    function onlyNumbers(evt) {
+        var e = event || evt; // for trans-browser compatibility
+        var charCode = e.which || e.keyCode;
+
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+
+    //
+    // This function is to calculate all the values of textboxes.
+    //
+
+    function Add() {
+        var a, b, c, d;
+        a = parseInt(document.getElementById("txtFirstValue").value);
+
+        //
+        // If textbox value is null i.e empty, then the below mentioned if condition will
+        // come into picture and make the value to '0' to avoid errors.
+        //
+
+        if (isNaN(a) == true) {
+            a = 0;
+        }
+        var b = parseInt(document.getElementById("txtSecondValue").value);
+        if (isNaN(b) == true) {
+            b = 0;
+        }
+
+
+        document.getElementById("txtTotal").value = a - b
+    }
+
+
+
+     
+        @*function showPro(str) {
+        alert(str);
+        $.ajax({
+            url: '@Url.Action("Ajax","SaleVoucher")',
+            contentType: "application/json; charset=utf-8",
+            method: "GET",
+            dataType: "json",
+            data: { 'value': $('#to').val() },
+            cache: false
+        })
+            .success(function (data) {
+                console.log("Success" + data);
+             
+            })
+        .error(function (data) {
+
+            console.log("Afsoos" + data);
+
+        });
+            
+    }*@
+
+        function GetVendors(_routeId) {
+
+            var url = "/SaleVoucher/AjaxCall/";
+            var vendorslist = "#VendorsDD";
+
+            $.ajax({
+                url: url,
+                data: { RouteID: _routeId },
+                cache: false,
+                type: "POST",
+                success: function (data) {
+                    $("#VendorsDD").html(data);
+                },
+                error: function (reponse) {
+                    alert("error : " + reponse);
+                }
+            });
+        }
+        
+        function findSaleOrder() {
+            var accountID = document.getElementById("to").value;
+            var item = document.getElementById("VendorsDD").value;
+            
+            var url = "/SaleVoucher/FindSaleOrder/";
+            var vendorslist = "#SO";
+
+            $.ajax({
+                url: url,
+                data: { Item: item , AccountId: accountID },
+                cache: false,
+                type: "POST",
+                success: function (data) {
+                    $("#SO").html(data);
+                    $("#SaleOrder").addClass("show");
+                },
+                error: function (reponse) {
+                    alert("error : Please Select Account and Good");
+                }
+            });
+        }
+
+
+
+    </script>
+
+
+
+    <script type="text/javascript">
+    function submitResult() {
+        if (confirm("Are You Sure To Post?") == false) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    </script>
+
+
+
+
+
+
+
+    <input id="alwaysFetch" type="hidden" />
+    <script>
+        setTimeout(function () {
+
+            var el = document.getElementById('alwaysFetch');
+            el.value = el.value ? location.reload() : true;
+            alert("Page is Loading Please Wait!!")
+
+        }, 0);
+
+        function validate(evt) {
+  var theEvent = evt || window.event;
+  var key = theEvent.keyCode || theEvent.which;
+  key = String.fromCharCode( key );
+  var regex = /[0-9]|\./;
+  if( !regex.test(key) ) {
+    theEvent.returnValue = false;
+    if (theEvent.preventDefault) theEvent.preventDefault();
+      alert("Please Enter Only Numeric Value")
+  }
+}
+
+
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

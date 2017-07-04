@@ -1,0 +1,227 @@
+﻿@model List<ranglerz_project.Models.TransactionAccount>
+@{
+    ViewBag.Title = "Journal Voucher";
+}
+
+    
+    <div class="loader"></div>
+
+    <div class="container body">
+
+
+        <div class="main_container">
+
+            @{
+                Html.RenderPartial("_Partial");
+            }
+
+
+            
+
+            <div class="right_col col-md-10 pull-right " role="main">
+                <div class="">
+
+
+
+                    <div class="page-title">
+                        <div class="title_left">
+                            <h3>Journal Voucher</h3>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>New Journal Voucher <strong>@ViewBag.Code</strong></h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <br />
+                                <form id="frm" onsubmit="return submitResult();" action="@Url.Action("journalPost", "TemporaryReports")" method="post" data-parsley-validate class="form-horizontal form-label-left">
+
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                            Debit <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <select name="to" id="debit" onchange="checkCreditDebit()" required class="form-control chzn-select col-md-7 col-xs-12">
+                                                <option value="">Please select any </option>
+                                                @foreach (var tr in Model)
+                                                {
+                                                    <option  value="@tr.name">@tr.MainAccount.name -> @tr.name </option>
+                                                }
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
+                                            Credit <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <select name="from" id="credit" onchange="checkCreditDebit()" required class="form-control chzn-select col-md-7 col-xs-12">
+                                                <option value="">Please select any </option>
+                                                @foreach (var tr in Model)
+                                                {
+                                                    <option id="crrr" value="@tr.name">@tr.MainAccount.name -> @tr.name </option>
+                                                }
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Amount </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" name="amount" onkeypress='validate(event)' required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Debit Date </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id=""  class="form-control col-md-7 col-xs-12" type="date"  name="Debitdate" max="2017-12-31" min="2017-01-01" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Credit Date </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id=""  class="form-control col-md-7 col-xs-12" type="date"  name="date" max="2017-12-31" min="2017-01-01" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Description </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" maxlength="50" name="description" required>
+                                        </div>
+                                    </div>
+                                    <div class="ln_solid"></div>
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+
+                                            <input type="submit" id="btnSubmit" name="actionType" value="Add Voucher" class="btn btn-success" />
+                                            <input type="submit" name="actionType" value="Add and Print" class="btn btn-success" />
+                                            <input type="hidden" name="voucherCode" value="@ViewBag.Code" />
+                                            @*<input type="submit" name="actionType" value="Add Voucher" class="btn btn-success" />*@
+                                            @*<input type="submit" name="actionType" value="Add Voucher" class="btn btn-success" />*@
+
+                                        </div>
+
+                                        </div>
+                                </form>
+                                </div>
+
+
+
+
+
+
+
+
+
+
+
+                            </div>
+                            
+                            </div> 
+                           
+                           
+                            </div>
+                     
+                        </div>
+                          
+                    </div>
+                </div>
+            
+       
+        
+
+
+  
+
+
+    <script type="text/javascript">
+    function submitResult() {
+        if (confirm("Are You Sure To Post?") == false) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    </script>
+
+    <input id="alwaysFetch" type="hidden" />
+    <script>
+        setTimeout(function () {
+            
+            var el = document.getElementById('alwaysFetch');
+            el.value = el.value ? location.reload() : true;
+            alert("Page is Loading Please Wait!!")
+       
+        }, 0);
+     
+        function validate(evt) {
+            var theEvent = evt || window.event;
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode(key);
+            var regex = /[0-9]|\./;
+            if (!regex.test(key)) {
+                theEvent.returnValue = false;
+                if (theEvent.preventDefault) theEvent.preventDefault();
+                alert("Please Enter Only Numeric Value")
+            }
+        }
+      
+       
+
+    </script>
+    
+   
+<script type="text/javascript">
+    $('#frm').bind('submit', function (e) {
+        // Disable the submit button while evaluating if the form should be submitted
+        $('#btnSubmit').prop('disabled', true);
+
+        //var valid = true;
+        var error = '';
+
+        // If the email field is empty validation will fail
+        if ($('[name=email]').val() === '') {
+            valid = true;
+            error = 'Email is required';
+        }
+
+        if (valid) {
+            // Prevent form from submitting if validation failed
+            e.preventDefault();
+
+            // Reactivate the button if the form was not submitted
+            $('#btnSubmit').prop('disabled', false);
+
+            alert(error);
+        }
+    });
+</script>
+
+
+
+ 
+<script>
+   //function checkCreditDebit()
+   // {
+      
+   //     var cr = document.getElementById('credit').value;
+   //     var dr = document.getElementById('debit').value;
+
+   //     if(cr==dr)
+   //     {
+   //         alert("Credit and Debit Account Cannot be Same")
+            
+            
+   //     }
+   // }
+</script>
+      

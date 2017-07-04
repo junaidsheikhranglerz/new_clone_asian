@@ -1,0 +1,146 @@
+﻿@model List<ranglerz_project.Models.Attendence>
+@{
+    ViewBag.Title = " Employee Attendence";
+    
+}
+
+
+
+
+
+
+
+    <div class="container body">
+
+
+        <div class="main_container">
+
+            @{
+                Html.RenderPartial("_Partial");
+            }
+
+            <!-- top navigation -->
+            <!-- /top navigation -->
+            <!-- page content -->
+            <div class="right_col col-md-10 pull-right " role="main">
+                <div class="">
+                    <div class="page-title">
+                        <div class="title_left">
+                            <h3>
+                                Attendence
+                            </h3>
+                        </div>
+
+
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <div class="row">
+
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>Date : @ViewBag.Date.ToShortDateString()  </h2>
+                                    <div class="clearfix"></div>
+                                </div>
+                                                           
+                                    
+                                   <div class="x_content">
+                            
+                                    <table id="example" class="table table-striped responsive-utilities jambo_table">
+                                        <thead>
+                                            <tr class="headings">
+                                                <th>ID</th>
+                                                <th>Name </th>
+                                                <th>Present </th>
+                                                <th>Absent</th>
+                                                <th>Time in </th>
+                                                <th>Time out </th>
+                                                <th>Action</th>
+                                                
+
+                                            </tr>
+                                        </thead>
+                                           @foreach (var v in Model)
+                                          {
+                                        <form action="@Url.Action("AttendencePost", "Employee", new {id = @v.Id })" method="post">
+
+                                                <tbody>
+
+
+
+                                                    <tr class="even pointer">
+
+                                                        <td>@v.Id</td>
+                                                        <td class=" ">@v.Employee.Name</td>
+                                                        @if (@v.present == 1)
+                                                        {
+                                                            <td><input type="checkbox" value="present" checked name="present"> </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td><input type="checkbox" value="present" name="present"> </td>
+                                                        }
+                                                        @if (@v.absent == 1)
+                                                        {
+                                                            <td><input type="checkbox" checked value="absent" name="present"> </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td><input type="checkbox" value="absent" name="present"> </td>
+                                                        }
+                                                      
+                                               
+                                                        <td><input type="time" value="@v.time_in_" name="timeIn" required> </td>
+                                                        <td> <input type="time" value="@v.time_out" name="timeOut" required> </td>
+
+
+
+
+
+                                                        <td>
+                                                         
+                                                            <input type="submit" value="Add" />
+                                         
+                                                        </td>
+
+
+                                                    </tr>
+
+
+
+
+                                                </tbody>
+                                            <input type="hidden" name="date" value="@v.date" />
+                                        </form>
+                                           }
+                                    </table>
+
+                                </div>
+                         
+                          
+                            </div>
+                        </div>
+
+                        <br />
+                        <br />
+                        <br />
+
+                    </div>
+                    <br />
+                    <br />
+                  
+                </div>
+
+            </div>
+            <!-- /page content -->
+        </div>
+
+    </div>
+
+
+    <script type="text/javascript">
+        function confirm_delete() {
+            return confirm('are you sure?');
+        }
+    </script>

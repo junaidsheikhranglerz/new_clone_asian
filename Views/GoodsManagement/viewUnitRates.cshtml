@@ -1,0 +1,114 @@
+﻿@model List<ranglerz_project.Models.UnitRate>
+
+
+@{
+    ViewBag.Title = "ViewUnitRates";
+}
+
+
+
+
+
+
+
+
+
+
+
+    <div class="container body">
+
+
+        <div class="main_container">
+
+            @{
+                Html.RenderPartial("_Partial");
+            }
+
+            <!-- top navigation -->
+            <!-- /top navigation -->
+            <!-- page content -->
+            <div class="right_col col-md-10 pull-right" role="main">
+                <div class="">
+                    <div class="page-title">
+                        <div class="title_left">
+                            <h3>
+                                All Users
+                            </h3>
+                        </div>
+
+
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <div class="row">
+
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>View Unit Rates</h2>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                                    <table id="example" class="table table-striped responsive-utilities jambo_table">
+                                        <thead>
+                                            <tr class="headings">
+
+                                                <th>Account Name </th>
+                                                <th>Good </th>
+                                                <th>Rate </th>
+                                                <th>Action </th>
+
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+
+                                            @foreach (var v in Model )
+                                            {
+                                                <tr class="even pointer">
+
+                                                    <td class=" ">@v.TransactionAccount.name</td>
+                                                    <td class=" ">@v.good </td>
+                                                    <td class=" ">@v.rate.ToString("#.##")</td>
+                                                                                                         
+                                                 
+                                                    <td>
+                                                        <a href="~/GoodsManagement/EditUnitRate/@v.Id">Add New Rate</a>
+                                                        &nbsp;
+                                                        
+                                                        <a href="~/GoodsManagement/DeleteUnitRate/@v.Id">Delete</a>
+                                                    </td>
+
+
+                                                </tr>
+                                            }
+
+
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br />
+                        <br />
+                        <br />
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- /page content -->
+        </div>
+
+    </div>
+    <script src="~/Scripts/js/bootstrap.min.js"></script>
+
+    <script src="~/Scripts/js/custom.js"></script>
+
+    <script type="text/javascript">
+    function confirm_delete() {
+        return confirm('are you sure?');
+    }
+    </script>

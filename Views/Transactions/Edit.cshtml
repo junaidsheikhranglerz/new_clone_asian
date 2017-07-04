@@ -1,0 +1,234 @@
+﻿@model ranglerz_project.Models.Transaction
+@{
+    ViewBag.Title = "Edit voucher";
+    var credit = 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+    <div class="container body">
+
+
+        <div class="main_container">
+
+            @{
+                Html.RenderPartial("_Partial");
+            }
+
+            <div class="right_col col-md-10 pull-right" role="main">
+                <div class="">
+
+
+
+                    <div class="page-title">
+                        <div class="title_left">
+                            <h3>Update Voucher : (@Model.voucher_code)</h3>
+                            @*<h3>Code : @Model.voucher_code</h3>*@
+                        </div>
+
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+
+                        <div class="x_panel">
+                            <form id="demo-form2" action="@Url.Action("Edit", "Transactions", new {id= Model.Id })" method="post" data-parsley-validate class="form-horizontal form-label-left">
+                                <div class="x_content">
+                                    <br />
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
+                                            Credit <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <select name="from" required class="form-control chzn-select col-md-7 col-xs-12">
+                                                <option value="@Model.from_account">@Model.from_account</option>
+                                               
+
+                                                @foreach (var tr in ViewBag.MyList)
+                                                {
+
+                                                    <option value="@tr.name">@tr.MainAccount.name -> @tr.name </option>
+                                                }
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">
+                                            Debit <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <select name="to" required class="form-control chzn-select col-md-7 col-xs-12">
+                                                <option value="@Model.to_account">@Model.to_account</option>
+                                            
+
+                                                @foreach (var tr in ViewBag.MyList)
+                                                {
+
+                                                    <option value="@tr.name">@tr.MainAccount.name -> @tr.name </option>
+                                                }
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Amount </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            @if (@Model.cr != 0)
+                                            {
+                                                if (Model.cheque_number != null)
+                                                {
+                                                    credit = (int)(@Model.cr + @Model.tax);
+                                                }
+                                                else
+                                                {
+                                                    credit = @Model.cr;
+                                                }
+
+
+                                            }
+                                            else
+                                            {
+                                                if (Model.cheque_number != null)
+                                                {
+
+                                                    credit = (int)(@Model.dr + @Model.tax);
+                                                }
+                                                else
+                                                {
+                                                    credit = @Model.dr;
+                                                }
+
+                                            }
+                                            <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" value="@credit" name="amount" required>
+                                        </div>
+                                    </div>
+                                    @if(@Model.voucher_type=="WEV")
+                                    { 
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Weight(KG) </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" value="@Model.net_weight" name="weight" required>
+                                        </div>
+                                    </div>
+                                    }
+                                    @if (@Model.voucher_type == "BP")
+                                    {
+
+                                        <div class="from-group">
+                                            <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Cheque type </label>
+                                            @if (Model.cash != null)
+                                            {
+                                                <label style="margin-right:20px;"> <input type="radio" value="cash" name="chequeType" checked />Cash </label>
+                                            }
+                                            else
+                                            {
+                                                <label style="margin-right:20px;"> <input type="radio" value="cash" name="chequeType" />Cash </label>
+                                            }
+                                            @if (Model.cross != null)
+                                            {
+                                                <label>  <input type="radio" value="cross" checked name="chequeType" /> Cross </label>
+                                            }
+                                            else
+                                            {
+                                                <label>  <input type="radio" value="cross" name="chequeType" /> Cross </label>
+                                            }
+                                            @if (Model.extra != null)
+                                            {
+                                                <label>  <input type="radio" value="none" checked name="chequeType" /> None </label>
+                                            }
+                                            else
+                                            {
+                                                <label>  <input type="radio" value="none" name="chequeType" /> None </label>
+                                            }
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tax % </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input id="middle-name" class="form-control col-md-7 col-xs-12" value="@Model.tax_orignal" type="text" name="tax" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Cheque # </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input id="middle-name" class="form-control col-md-7 col-xs-12" type="text" value="@Model.cheque_number" name="chequeNo" required>
+                                            </div>
+                                        </div>
+
+                                    }
+                                    
+
+                                    @{
+
+                                        string creditDate = String.Format("{0:yyyy/MM/dd}", Model.created_at);
+                                        string debitDate = String.Format("{0:yyyy/MM/dd}", ViewBag.debitDate);
+                                        //string updationDate = String.Format("{0:yyyy/MM/dd}", Model.updated_at);
+                                    }
+
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Debit Date </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="middle-name" type="date" class="form-control col-md-7 col-xs-12" name="Debitdate" value="@debitDate" max="2017-12-31" min="2017-01-01" required>
+                                        </div>
+                                    </div>
+
+                                    
+
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Credit Date </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="middle-name" type="date" class="form-control col-md-7 col-xs-12" value="@creditDate" name="date" max="2017-12-31" min="2017-01-01" required>
+                                        </div>
+                                    </div>
+
+                                    @*<div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Updation Date </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="middle-name" type="date" class="form-control col-md-7 col-xs-12" value="@updationDate" readonly name="updation_date" required>
+                                        </div>
+                                    </div>*@
+
+                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Description </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input id="middle-name" class="form-control col-md-7 col-xs-12" value="@Model.description" type="text" name="description" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ln_solid"></div>
+                                <div class="form-group">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+
+                                        <input type="submit" value="Update" class="btn btn-success" />
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+ 
+
+ 

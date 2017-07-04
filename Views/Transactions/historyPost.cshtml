@@ -1,0 +1,579 @@
+﻿@model List<ranglerz_project.Models.TransactionAccount>
+
+@{
+
+    ViewBag.Title = "Reports";
+    var sesion = Session["name"].ToString();
+    int result1;
+    int result2;
+    var balance = ViewBag.openingBalance;
+    //ViewBag.openingBalance
+    var totalDebit = 0;
+    var totalCredit = 0;
+    var totalBalance = 0;
+    string values = null;
+    string debCommas = null;
+    string crCommas = null;
+    string totalBalanceCommas = null;
+    string totalCreditCommas = null;
+    string totaldebitCommas = null;
+    int allReportsEdit = Convert.ToInt32(Session["all_reports_edit"]);
+    int counter = 0;
+
+}
+
+
+
+
+    <link rel="stylesheet" href="~/Content/css/chosen.css" media="all" />
+
+
+    <script src="~/Scripts/js/jquery.min.js"></script>
+
+
+    <script src="~/Scripts/jquery-1.8.3.min.js"></script>
+    <script src="~/Scripts/chosen.jquery.min.js"></script>
+
+
+
+    <script>
+        //* enchanced select
+        chosen_select = {
+            init: function () {
+                $(".chzn-select").chosen();
+            }
+        };
+
+        $(document).ready(function () {
+            // extended select elements
+            chosen_select.init();
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<body class="nav-md">
+
+    <div class="container body">
+
+
+        <div class="main_container">
+
+            @{
+                Html.RenderPartial("_Partial");
+            }
+
+            <!-- top navigation -->
+            <!-- /top navigation -->
+            <!-- page content -->
+            <div class="right_col col-md-10 pull-left" role="main">
+                <div class="">
+                    <div class="page-title">
+                        <div class="title_left">
+                            <h3>
+                                Reports
+                            </h3>
+                        </div>
+
+
+                    </div>
+                    <div class="clearfix"></div>
+                    <div id="notShowSearchDiv" class="row">
+                        <div class="x_content">
+                            <br />
+                            <form id="demo-form2" action="@Url.Action("historyPost","Transactions")" method="get" data-parsley-validate class="form-horizontal form-label-left">
+
+                                <div class="form-group">
+
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <select name="search" required class="form-control chzn-select col-md-7 col-xs-12">
+                                            <option value="@ViewBag.search">@ViewBag.search </option>
+                                            @foreach (var tr in ViewBag.Mylist)
+                                            {
+                                                if (tr.name == ViewBag.search)
+                                                {
+                                                    continue;
+                                                }
+                                                <option value="@tr.name">@tr.name -> @tr.MainAccount.name </option>
+                                            }
+
+
+
+                                        </select>
+                                        <input type="date" id="dateDefault" name="dateStart" required />
+                                        <input type="date" id="dateDefault2" name="dateEnd" required />
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+
+                                        <input type="submit" value="Search" name="submitValue" class="btn btn-success" />
+                                        <input type="submit" value="Search And Print" name="submitValue" class="btn btn-success" />
+                                    </div>
+                                </div>
+                                <div class="ln_solid"></div>
+
+
+                            </form>
+
+
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <div>
+                                        <h2 style="margin:4px 350px 4px 350px "><strong>@ViewBag.search</strong></h2>
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                    <div>
+                                        <h2> <strong> First Opening Balance(Rs.)&nbsp;:&nbsp;&nbsp;&nbsp;</strong>@ViewBag.firstOpeningbalance</h2>
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                    <div>
+                                        <h2><strong>Opening Balance(Rs.)&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong>@ViewBag.openingBalance</h2>
+                                    </div>
+                                    <div class="pull-right">
+                                        <input type="button" id="btnPrint" class="btn btn-success" onclick="tableToExcel('testTable', 'W3C Example Table');" value="Export to Excel">
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+
+
+                                @*<table id="example" class="table table-striped responsive-utilities jambo_table">
+                                        <thead>
+                                            <tr id="ShowHeading" class="headings" style="display:none">
+
+
+
+                                                <th>Date </th>
+                                                <th>Type </th>
+                                                <th>Code </th>
+                                                <th>Description </th>
+                                                <th>Dr </th>
+                                                <th>Cr </th>
+
+                                                <th>Balance </th>
+                                                <th id="notShowAction">Action</th>
+
+                                            </tr>
+                                        </thead>
+                                    </table>*@
+
+                                @*<form action="@Url.Action("ExportData","Transactions")" method="post">*@
+                                <div class="x_content">
+                                    <table id="testTable" class="table table-striped responsive-utilities jambo_table">
+                                        <thead>
+                                            <tr id="notShowHeading" class="headings">
+
+
+
+                                                <th>Date </th>
+                                             
+                                                <th>Code </th>
+                                                <th>Description </th>
+                                                <th>Dr </th>
+                                                <th>Cr </th>
+
+                                                <th>Balance </th>
+                                                <th id="notShowAction">Action</th>
+
+                                            </tr>
+                                        </thead>
+
+                                        <tbody id="loadedID">
+                                            @{
+                                                int count = 0;
+
+                                                counter = 0;
+                                            }
+                                            @foreach (var v in Model.OrderBy(x => x.id))
+                                            {
+
+
+                                                foreach (var t in v.Transactions.Where(x => x.is_active == "Y").OrderBy(x => x.created_at).ToList())
+                                                {
+                                                    result1 = DateTime.Compare(ViewBag.start, t.created_at);
+                                                    result2 = DateTime.Compare(ViewBag.end, t.created_at);
+                                                    debCommas = (String.Format("{0:0,0}", t.dr));
+                                                    crCommas = (String.Format("{0:0,0}", t.cr));
+
+                                                    if (t.extra == "Sale" && v.main_id != 12)
+                                                    {
+                                                        continue;
+                                                    }
+                                                    if (t.cr == 0 && t.dr == 0)
+                                                    {
+                                                        continue;
+                                                    }
+                                                    if (t.is_active != "Y")
+                                                    {
+                                                        continue;
+                                                    }
+                                                    if (result1 < 0 || result1 == 0)
+                                                    {
+                                                        if (result2 != -1)
+                                                        {
+                                                            counter = counter + 1;
+
+                                                            <tr class="even pointer">
+
+
+                                                                <td>@t.created_at.ToShortDateString()</td>
+
+
+
+
+                                                          
+                                                                <td>@t.voucher_code</td>
+                                                                <td>@t.description <strong> From :</strong>  @t.from_account <strong>To :</strong>   @t.to_account </td>
+
+                                                                <td>@crCommas</td>
+                                                                <td>@debCommas</td>
+
+                                                                @{
+
+
+                                                            if (t.cr > 0)
+                                                            {
+                                                                balance = balance + t.cr;
+                                                            }
+                                                            else
+                                                            {
+                                                                balance = balance - t.dr;
+                                                            }
+
+                                                            //   var tt = Convert.ToInt64(t.balance);
+                                                            //   var balanceTotal = String.Format("{0:#,##0.00}",tt);
+                                                            values = (String.Format("{0:0,0}", balance));
+                                                                }
+
+                                                                <td>@values</td>
+
+                                                                @{
+                                                            totalBalance = totalBalance + balance;
+                                                            totalCredit = totalCredit + t.cr;
+                                                            totalDebit = totalDebit + t.dr;
+
+
+                                                                }
+
+                                                                <td id="@("notShow"+@counter)">
+                                                                    @if (t.description != "WHT" && allReportsEdit == 1)
+                                                                    {
+
+
+                                                                        <a href="~/Transactions/Edit/@t.Id">Edit</a>
+                                                                        <a href="~/Transactions/Detail/@t.Id">Detail</a>
+                                                                        <a href="javascript:;" onclick="DeleteFunctionCall(@t.Id);">Delete</a>
+
+
+
+                                                                    }
+                                                                </td>
+
+
+
+
+
+                                                            </tr>
+                                                        }
+                                                    }
+                                                    count = count + 1;
+                                                }
+                                            }
+
+
+                                            @{
+                                                totalCreditCommas = (String.Format("{0:0,0}", totalCredit));
+                                                totaldebitCommas = (String.Format("{0:0,0}", totalDebit));
+                                                totalBalanceCommas = (String.Format("{0:0,0}", totalBalance));
+                                            }
+
+                                            <tr style="background-color:#3f5367; color:#fff">
+
+                                                <td>Total</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>@totalCreditCommas</td>
+                                                <td>@totaldebitCommas</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                            </tr>
+
+
+
+
+
+                                        </tbody>
+
+
+                                    </table>
+
+                                    <input type="hidden" name="search" id="searchingValue" value="@ViewBag.search" />
+                                    <input type="hidden" name="dateStart" id="dateStart" value="@ViewBag.start" />
+                                    <input type="hidden" name="dateEnd" id="dateEnd" value="@ViewBag.end" />
+
+
+
+
+
+
+                                    @*<p id="notShowPrint">
+                                            <a target="_blank" href="" onclick="printingsomething(@counter);"><strong>PRINT</strong></a>
+                                        </p>*@
+
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+                        <br />
+                        <br />
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- /page content -->
+        </div>
+
+    </div>
+
+    <script src="~/Scripts/js/bootstrap.min.js"></script>
+
+    <script src="~/Scripts/js/custom.js"></script>
+
+    <script type="text/javascript">
+        function confirm_delete() {
+            return confirm('are you sure?');
+        }
+    </script>
+
+
+    <script>
+        function setInputDate(_id) {
+            var _dat = document.querySelector(_id);
+            var hoy = new Date(),
+                d = hoy.getDate(),
+                m = hoy.getMonth() + 1,
+                y = hoy.getFullYear(),
+                data;
+
+            if (d < 10) {
+                d = "0" + d;
+            };
+            if (m < 10) {
+                m = "0" + m;
+            };
+
+            data = y + "-" + m + "-" + d;
+            console.log(data);
+            _dat.value = data;
+        };
+
+        setInputDate("#dateDefault");
+    </script>
+    <script>
+        function setInputDate(_id) {
+            var _dat = document.querySelector(_id);
+            var hoy = new Date(),
+                d = hoy.getDate(),
+                m = hoy.getMonth() + 1,
+                y = hoy.getFullYear(),
+                data;
+
+            if (d < 10) {
+                d = "0" + d;
+            };
+            if (m < 10) {
+                m = "0" + m;
+            };
+
+            data = y + "-" + m + "-" + d;
+            console.log(data);
+            _dat.value = data;
+        };
+
+        setInputDate("#dateDefault2");
+    </script>
+
+
+    <script>
+
+
+
+
+        function DeleteFunctionCall(id, name) {
+
+            $("body").css("cursor", "progress");
+            var search = document.getElementById('searchingValue');
+            var strt = document.getElementById('dateStart').value;
+            var end = document.getElementById('dateEnd').value;
+            var name = search.value;
+
+            var url = "/Transactions/Delete/";
+            var vendorslist = "#VendorsDD";
+
+            $.ajax({
+                url: url,
+                data: { ID: id, SEARCH: name, START: strt, END: end },
+                cache: false,
+                type: "GET",
+                success: function (data) {
+                    location.reload;
+                    //alert("ok")
+                    //$('#loadedID').load();
+
+                    $("body").css("cursor", "default");
+                },
+                error: function (reponse) {
+                    alert("error : " + reponse);
+                }
+
+            });
+
+
+        }
+
+        function printingsomething(counter) {
+
+            for (i = 1; i <= counter; i++) {
+                document.getElementById("notShow" + i).style.display = "none";
+            }
+
+            document.getElementById("notShowAction").style.display = "none";
+            document.getElementById("notShowPrint").style.display = "none";
+            document.getElementById("notShowSearchDiv").style.display = "none";
+            //document.getElementById("notShowHeading").style.display = "none";
+            //document.getElementById("ShowHeading").style.display = "block";
+
+
+
+
+
+        }
+
+
+    </script>
+
+
+
+
+    <script type="text/javascript">
+        var tableToExcel = (function () {
+            var uri = 'data:application/vnd.ms-excel;base64,'
+              , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+              , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+              , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+            return function (table, name) {
+                if (!table.nodeType) table = document.getElementById(table)
+                var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+                window.location.href = uri + base64(format(template, ctx))
+            }
+        })()
+    </script>
+
+
+
+
+
+    <script>
+        function PDF() {
+            alert("sss")
+            var quotes = document.getElementById("pdf");
+
+            html2canvas(quotes, {
+                onrendered: function (canvas) {
+
+                    //! MAKE YOUR PDF
+                    var pdf = new jsPDF('p', 'pt', 'letter');
+
+                    for (var i = 0; i <= quotes.clientHeight / 980; i++) {
+                        //! This is all just html2canvas stuff
+                        var srcImg = canvas;
+                        var sX = 0;
+                        var sY = 980 * i; // start 980 pixels down for every new page
+                        var sWidth = 900;
+                        var sHeight = 980;
+                        var dX = 0;
+                        var dY = 0;
+                        var dWidth = 900;
+                        var dHeight = 980;
+
+                        window.onePageCanvas = document.createElement("canvas");
+                        onePageCanvas.setAttribute('width', 900);
+                        onePageCanvas.setAttribute('height', 980);
+                        var ctx = onePageCanvas.getContext('2d');
+                        // details on this usage of this function:
+                        // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Using_images#Slicing
+                        ctx.drawImage(srcImg, sX, sY, sWidth, sHeight, dX, dY, dWidth, dHeight);
+
+                        // document.body.appendChild(canvas);
+                        var canvasDataURL = onePageCanvas.toDataURL("image/png", 1.0);
+
+                        var width = onePageCanvas.width;
+                        var height = onePageCanvas.clientHeight;
+
+                        //! If we're on anything other than the first page,
+                        // add another page
+                        if (i > 0) {
+                            pdf.addPage(612, 791); //8.5" x 11" in pts (in*72)
+                        }
+                        //! now we declare that we're working on that page
+                        pdf.setPage(i + 1);
+                        //! now we add content to that page!
+                        pdf.addImage(canvasDataURL, 'PNG', 20, 40, (width * .62), (height * .62));
+
+                    }
+                    //! after the for loop is finished running, we save the pdf.
+                    pdf.save('test.pdf');
+                }
+            });
+        }
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
